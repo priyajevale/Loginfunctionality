@@ -129,13 +129,15 @@
 // };
 
 // export default AuthForm;
-import { useState, useRef } from 'react';
+import { useState, useRef, useContext } from 'react';
 import classes from './AuthForm.module.css';
+import AuthContext from '../Store/Auth-Context';
 
 const AuthForm = () => {
   const [isLogin, setIsLogin] = useState(true);
   const emailInputRef = useRef();
   const passwordInputRef = useRef();
+  const authCtx = useContext(AuthContext);
 
   const switchAuthModeHandler = () => {
     setIsLogin(prevState => !prevState);
@@ -147,7 +149,7 @@ const AuthForm = () => {
     const enteredEmail = emailInputRef.current.value;
     const enteredPassword = passwordInputRef.current.value;
     
-    let url = 'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyC1IXLN20_EreGYaxaaP4J9YTyTAH5OvwI'; // Replace YOUR_API_KEY with your actual Firebase API key
+    let url = 'https://identitytoolkit.googleapis.com/v1/accounts:signInWithCustomToken?key= AIzaSyC1IXLN20_EreGYaxaaP4J9YTyTAH5OvwI'; // Replace YOUR_API_KEY with your actual Firebase API key
 
     fetch(url, {
       method: 'POST',
@@ -176,11 +178,16 @@ const AuthForm = () => {
     .then(data => {
       // Store the token securely
       localStorage.setItem('token', data.idToken); // Store in localStorage for example
-      console.log(data.idToken); // Log the token in the console
-      // Perform further actions, such as redirecting the user or updating the UI
+      authCtx.login(data.idToken); // Update authentication state
+      // Clear input fields
+      emailInputRef.current.value = '';
+      passwordInputRef.current.value = '';
     })
     .catch(err => {
       alert(err.message); // Show authentication failure message
+      // Clear input fields
+      emailInputRef.current.value = '';
+      passwordInputRef.current.value = '';
     });
   };
 

@@ -14,11 +14,14 @@ import React from 'react';
 import { createRoot } from 'react-dom/client'; // Import createRoot from react-dom/client
 import { BrowserRouter } from 'react-router-dom';
 import App from './App';
+import { AuthContextProvider } from './components/Store/Auth-Context';
 
 createRoot(document.getElementById('root')).render(
+  <AuthContextProvider>
   <BrowserRouter>
     <App />
   </BrowserRouter>
+  </AuthContextProvider>
 );
 
 // If you want to start measuring performance in your app, pass a function
