@@ -10,39 +10,86 @@ const AuthForm = () => {
   const switchAuthModeHandler = () => {
     setIsLogin((prevState) => !prevState);
   };
-  const submitHandler = (event) =>{
+  // const submitHandler = (event) => {
+  //   event.preventDefault();
+  
+  //   const enteredEmail = emailInputRef.current.value;
+  //   const enteredPassword = passwordInputRef.current.value;
+  //   let url = 'ttps://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyC1IXLN20_EreGYaxaaP4J9YTyTAH5OvwI'; // Replace YOUR_API_KEY with your actual Firebase API key
+  
+  //   fetch(url, {
+  //     method: 'POST',
+  //     body: JSON.stringify({
+  //       email: enteredEmail,
+  //       password: enteredPassword,
+  //       returnSecureToken: true
+  //     }),
+  //     headers: {
+  //       'Content-Type': 'application/json'
+  //     }
+  //   })
+  //   .then(res => {
+  //     if (res.ok) {
+  //       return res.json();
+  //     } else {
+  //       return res.json().then(data => {
+  //         let errorMessage = 'Authentication failed';
+  //         if (data && data.error && data.error.message) {
+  //           errorMessage = data.error.message;
+  //         }
+  //         throw new Error(errorMessage);
+  //       });
+  //     }
+  //   })
+  //   .then(data => {
+  //     // Store the token securely
+  //     localStorage.setItem('token', data.idToken); // Store in localStorage for example
+  //     console.log(data.idToken); // Log the token in the console
+  //     // Perform further actions, such as redirecting the user or updating the UI
+  //   })
+  //   .catch(err => {
+  //     alert(err.message); // Show authentication failure message
+  //   });
+  // };
+  const submitHandler = (event) => {
     event.preventDefault();
-
-    const enteredEmail=emailInputRef.current.value;
-    const enteredPassword=passwordInputRef.current.value;
-    if(isLogin){
-
-    }else{
-        fetch('https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyC1IXLN20_EreGYaxaaP4J9YTyTAH5OvwI' ,
-        {
-method:'POST',
-body:JSON.stringify({
-
-    email:enteredEmail,
-    password:enteredPassword,
-    returnSecureToken:true
-}),
-headers:{
-'Content-Type':'application/json'
-}
-        }
-        ).then(res =>{
-            if(res.ok){
-
-            }else{
-                res.json().then(data =>{
-                    console.log(data);
-                })
-            }
-        })
-    }
+  
+    const enteredEmail = emailInputRef.current.value;
+    const enteredPassword = passwordInputRef.current.value;
+    const url = 'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyC1IXLN20_EreGYaxaaP4J9YTyTAH5OvwI';
+  
+    fetch(url, {
+      method: 'POST',
+      body: JSON.stringify({
+        email: enteredEmail,
+        password: enteredPassword,
+        returnSecureToken: true
+      }),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+    .then(res => {
+      if (res.ok) {
+        return res.json();
+      } else {
+        return res.json().then(data => {
+          let errorMessage = 'Authentication failed';
+          throw new Error(errorMessage);
+        });
+      }
+    })
+    .then(data => {
+      // Store the token securely
+      localStorage.setItem('token', data.idToken); // Store in localStorage for example
+      console.log(data.idToken); // Log the token in the console
+      // Perform further actions, such as redirecting the user or updating the UI
+    })
+    .catch(err => {
+      alert(err.message); // Show authentication failure message
+    });
   };
-
+  
   return (
     <section className={classes.auth}>
       <h1>{isLogin ? 'Login' : 'Sign Up'}</h1>
